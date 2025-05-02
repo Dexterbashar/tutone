@@ -1,0 +1,70 @@
+---
+# Log level for running tutone
+# Default: info
+log_level: debug
+
+# File to store a copy of the schema
+# Default: schema.json
+cache:
+  schema_file: schema.json
+
+# GraphQL endpoint to query for schema
+# Required
+endpoint: https://api.newrelic.com/graphql
+
+# How to authenticate to the API
+auth:
+  # Header set with the API key for authentication
+  # Default: Api-Key
+  header: Api-Key
+
+  # Environment variable to get the API key from
+  # Default: TUTONE_API_KEY
+  api_key_env_var: NEW_RELIC_API_KEY
+
+packages:
+  - name: nerdgraph
+    path: pkg/nerdgraph
+    import_path: github.com/newrelic/newrelic-client-go/pkg/nerdgraph
+    generators:
+      - typegen
+    mutations:
+      - name: apiAccessCreateKeys
+    types:
+      - name: AlertsPolicy
+      - name: ID
+        field_type_override: string
+        skip_type_create: true
+
+  - name: cloud
+    path: pkg/cloud
+    imports:
+      - github.com/newrelic/newrelic-client-go/internal/serialization
+      - encoding/json
+      - fmt
+    generators:
+      - typegen
+      - nerdgraphclient
+    queries:
+      - path: ["actor", "cloud"]
+        endpoints:
+          - name: linkedAccounts
+            max_query_field_depth: 2
+            include_arguments:
+              - "provider"
+    mutations:
+      - name: cloudConfigureIntegration
+      - name: cloudDisableIntegration
+      - name: cloudLinkAccount
+        argument_type_overrides:
+          accountId: "Int!"
+          accounts: "CloudLinkCloudAccountsInput!"
+      - name: cloudRenameAccount
+        argument_type_overrides:
+          accountId: "Int!"
+          accounts: "[CloudRenameAccountsInput!]!"
+      - name: cloudUnlinkAccount
+
+generators:
+  - name: typegen
+    fileName: "types.go"

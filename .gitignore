@@ -1,0 +1,12 @@
+.DS_Store
+.vscode/
+bin/*
+coverage/*
+dist/*
+schema.json
+tmp/*
+vendor/*
+*.json
+*.yaml
+*.yml
+testdata/schema.json

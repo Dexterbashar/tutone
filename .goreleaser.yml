@@ -1,0 +1,63 @@
+project_name: tutone
+
+env:
+  - GO111MODULE=on
+
+before:
+  hooks:
+    - go mod download
+
+builds:
+  - id: tutone
+    dir: cmd/tutone
+    binary: tutone
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+    ldflags:
+      - -s -w -X main.version={{.Version}} -X main.appName={{.Binary}}
+
+release:
+  name_template: "{{.ProjectName}} v{{.Version}}"
+
+archives:
+  - id: "default"
+    builds:
+      - newrelic
+    name_template: >-
+      {{- .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end -}}
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - CHANGELOG.md
+      - LICENSE
+      - README.md
+
+# dockers:
+#   - dockerfile: build/package/Dockerfile
+#     image_templates:
+#       - "newrelic/tutone:{{ .Tag }}"
+#       - "newrelic/tutone:v{{ .Major }}.{{ .Minor }}"
+#       - "newrelic/tutone:latest"
+#     ids:
+#       - tutone
+#     build_flag_templates:
+#       - "--pull"
+#       - "--label=repository=http://github.com/violentbact/tutone"
+#       - "--label=homepage=https://developer.newrelic.com/"
+#       - "--label=maintainer=Developer Toolkit <opensource@newrelic.com>"
+
+# Already using git-chglog
+changelog:
+  skip: true

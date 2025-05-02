@@ -1,0 +1,42 @@
+//go:build integration
+
+package {{.PackageName | lower}}
+{{$packageName := .PackageName}}
+
+import(
+  "testing"
+
+  "github.com/stretchr/testify/require"
+
+  "github.com/newrelic/newrelic-client-go/v2/pkg/testhelpers"
+)
+
+{{range $index, $_ := .Mutations}}
+func Test{{.Name | title}}(t *testing.T) {
+  t.Parallel()
+t.Error("This test was generated but is incomplete. Please add the necessary code and additional test cases to cover the proper scenarios.")
+  client := new{{$packageName | title}}IntegrationTestClient(t)
+  require.NotNil(t, client)
+
+  {{range .Signature.Input -}}
+  {{.Name | untitle}} {{.Type}} := {{.Type}}{
+    // TODO: Add required variables to initialize instance of this input type
+  }
+  {{- end}}
+
+  result, err {{if (eq $index 0)}}:{{end}}= client.{{.Name | title}}(
+  {{- range .Signature.Input}}
+    {{.Name | untitle}},
+  {{- end}}
+  )
+
+  require.NoError(t, err)
+  require.NotNil(t, result)
+}
+{{end}}
+
+func new{{$packageName | title}}IntegrationTestClient(t *testing.T) AgentApplications {
+	tc := testhelpers.NewIntegrationTestConfig(t)
+
+	return New(tc)
+}
